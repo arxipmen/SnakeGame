@@ -1,13 +1,25 @@
 package arx.game;
 
+import arx.game.objects.Snake;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class SnakeGame extends JPanel{
+public class SnakeGame extends JPanel implements ActionListener{
 
     public static final int SCALE   = 32;
-    public static final int WIDTH   = 20;
-    public static final int HEIGHT  = 20;
+    public static final int WIDTH   = 30;
+    public static final int HEIGHT  = 30;
+    public static final int SPEED   = 3;
+
+    Snake snake = new Snake(10, 10, 10, 10);
+    Timer timer = new Timer(1000 / SPEED, this);
+
+    public SnakeGame() {
+        timer.start();
+    }
 
     public static void main(String ... Args) {
         JFrame f = new JFrame();
@@ -29,9 +41,19 @@ public class SnakeGame extends JPanel{
         for(int y = 0; y < HEIGHT * SCALE; y += SCALE) {
             g.drawLine(0, y, WIDTH * SCALE, y);
         }
+        for(int  tail = 0; tail < snake.lengthSnake; tail++) {
+            g.setColor(color(255, 255, 255));
+            g.fillRect(snake.snakeX[tail] * SCALE + 1, snake.snakeY[tail] * SCALE + 1, SCALE - 1, SCALE - 1);
+        }
     }
 
     public Color color(int red, int green, int blue) {
         return new Color(red, green, blue);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        snake.move();
+        repaint();
     }
 }
